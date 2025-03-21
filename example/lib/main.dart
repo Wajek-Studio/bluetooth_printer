@@ -24,18 +24,28 @@ class _MyAppState extends State<MyApp> {
 
   String? _selectedAddress;
 
+  Future<void> init() async {
+    try {
+      setState(() { _isLoading = true; });
+      _devices = (await _bluetoothPrinterPlugin.getBondedDevices()) ?? [];
+      setState(() { _isLoading = false; });
+    } on PlatformException catch (e) {
+      if (e.code == "BLUETOOTH_PERMISSION_REQUIRED") {
+        await _bluetoothPrinterPlugin.requestBluetoothPermission();
+        init();
+        setState(() { _isLoading = false; });
+      }
+      if (e.code == "BLUETOOTH_PERMISSION_DENIED") {
+        setState(() { _isLoading = false; });
+      }
+    } catch(e) {
+      setState(() { _isLoading = false; });
+    }
+  }
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      try {
-        setState(() { _isLoading = true; });
-        _devices = (await _bluetoothPrinterPlugin.getBondedDevices()) ?? [];
-        setState(() { _isLoading = false; });
-      } catch(e) {
-        setState(() { _isLoading = false; });
-      }
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) async { init(); });
   }
 
   @override
@@ -50,6 +60,7 @@ class _MyAppState extends State<MyApp> {
             child: CircularProgressIndicator()
           ) : Column(
             children: [
+              SizedBox(height: 20),
               ..._devices.map((dynamic d) => ListTile(
                 title: Text(d["name"]),
                 subtitle: Text(d["address"]),

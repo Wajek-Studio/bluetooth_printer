@@ -38,4 +38,8 @@ abstract class BluetoothPrinterPlatform extends PlatformInterface {
   Future<bool?> write(String text) {
     throw UnimplementedError('write() has not been implemented.');
   }
+
+  Future<bool?> requestBluetoothPermission() {
+    throw UnimplementedError('requestBluetoothPermission() has not been implemented.');
+  }
 }

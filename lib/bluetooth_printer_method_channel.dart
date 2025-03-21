@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -36,6 +34,12 @@ class MethodChannelBluetoothPrinter extends BluetoothPrinterPlatform {
     final res = await methodChannel.invokeMethod<bool?>('write', <String, dynamic>{
       "text": text
     });
+    return res;
+  }
+
+    @override
+  Future<bool?> requestBluetoothPermission() async {
+    final res = await methodChannel.invokeMethod<bool?>('requestBluetoothPermission');
     return res;
   }
 }
