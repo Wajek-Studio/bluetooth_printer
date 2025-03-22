@@ -94,13 +94,6 @@ public class BluetoothPrinterPlugin implements FlutterPlugin, MethodCallHandler,
     this.activity = null;
   }
 
-  private boolean hasBluetoothPermission() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-      return ContextCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED;
-    }
-    return true;
-  }
-
   private void requestBluetoothPermission(@NonNull MethodChannel.Result result) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
       result.success(true);
@@ -112,14 +105,10 @@ public class BluetoothPrinterPlugin implements FlutterPlugin, MethodCallHandler,
       return;
     }
 
-    if (!hasBluetoothPermission()) {
-      pendingResult = result;
-      ActivityCompat.requestPermissions(activity,
-              new String[]{Manifest.permission.BLUETOOTH_CONNECT},
-              1001);
-    } else {
-      result.success(true);
-    }
+    pendingResult = result;
+    ActivityCompat.requestPermissions(activity,
+            new String[]{Manifest.permission.BLUETOOTH_CONNECT},
+            1001);
   }
 
   @Override
@@ -140,7 +129,8 @@ public class BluetoothPrinterPlugin implements FlutterPlugin, MethodCallHandler,
 
   private void getBondedDevices(@NonNull Result result) {
     BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
-    if (!hasBluetoothPermission()) {
+    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ContextCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
       result.error("BLUETOOTH_PERMISSION_REQUIRED", "Bluetooth permission is required", null);
       return;
     }
