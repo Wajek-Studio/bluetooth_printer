@@ -22,30 +22,40 @@ class _MyAppState extends State<MyApp> {
   bool _isLoading = false;
   List<dynamic> _devices = [];
 
+  String? _errorCode;
+
   String? _selectedAddress;
 
-  Future<void> init() async {
+  Future<void> _init() async {
     try {
-      setState(() { _isLoading = true; });
+      setState(() { 
+        _errorCode = null;
+        _isLoading = true;
+      });
       _devices = (await _bluetoothPrinterPlugin.getBondedDevices()) ?? [];
+      print(_devices);
       setState(() { _isLoading = false; });
-    } on PlatformException catch (e) {
-      if (e.code == "BLUETOOTH_PERMISSION_REQUIRED") {
-        await _bluetoothPrinterPlugin.requestBluetoothPermission();
-        init();
-        setState(() { _isLoading = false; });
-      }
-      if (e.code == "BLUETOOTH_PERMISSION_DENIED") {
-        setState(() { _isLoading = false; });
-      }
-    } catch(e) {
-      setState(() { _isLoading = false; });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+        _errorCode = (e is PlatformException) ? e.code : 'UNKNOWN_ERROR';
+      });
     }
   }
+
+  Future<bool?> _allowBluetooth() async {
+    try {
+      bool? res = await _bluetoothPrinterPlugin.requestBluetoothPermission();
+      return res;
+    } catch(e) {
+      return null;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async { init(); });
+    WidgetsBinding.instance.addPostFrameCallback((_) async { _init(); });
   }
 
   @override
@@ -55,23 +65,58 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: SingleChildScrollView(
-          child: _isLoading ? Center(
-            child: CircularProgressIndicator()
-          ) : Column(
-            children: [
-              SizedBox(height: 20),
-              ..._devices.map((dynamic d) => ListTile(
-                title: Text(d["name"]),
-                subtitle: Text(d["address"]),
-                trailing: _selectedAddress == d["address"] ? Icon(Icons.check_circle) : null,
-                onTap: () {
-                  setState(() {
-                    _selectedAddress = d["address"];
-                  });
-                },
-              )
-            )],
+        body: Center(
+          child: SingleChildScrollView(
+            child: _isLoading ? Center(
+              child: CircularProgressIndicator()
+            ) : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if(_errorCode == 'BLUETOOTH_PERMISSION_REQUIRED') Container(
+                  constraints: BoxConstraints(
+                    maxWidth: 250
+                  ),
+                  child: Column(
+                    spacing: 16,
+                    children: [
+                      Text("Aplikasi membutuhkan akses ke bluetooth anda", textAlign: TextAlign.center),
+                      ElevatedButton(onPressed: () async {
+                        bool? res = await _allowBluetooth();
+                        if(res == null) return;
+                        if(res == true) _init();
+                      }, child: Text("Beri Izin"))
+                    ],
+                  ),
+                ),
+                if(_errorCode == 'BLUETOOTH_NOT_ENABLED') Container(
+                  constraints: BoxConstraints(
+                    maxWidth: 250
+                  ),
+                  child: Column(
+                    spacing: 16,
+                    children: [
+                      Text("Pastikan bluetooth pada perangkat anda menyala, lalu tekan tombol berikut", textAlign: TextAlign.center),
+                      ElevatedButton(onPressed: () async {
+                        _init();
+                      }, child: Text("Reload"))
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(_errorCode ?? ""),
+                SizedBox(height: 20),
+                ..._devices.map((dynamic d) => ListTile(
+                  title: Text(d["name"]),
+                  subtitle: Text(d["address"]),
+                  trailing: _selectedAddress == d["address"] ? Icon(Icons.check_circle) : null,
+                  onTap: () {
+                    setState(() {
+                      _selectedAddress = d["address"];
+                    });
+                  },
+                )
+              )],
+            ),
           ),
         ),
         bottomNavigationBar: Padding(
@@ -87,7 +132,6 @@ class _MyAppState extends State<MyApp> {
                 "\x1Ba2HP/WA. 082143255597\n"
               );
             }
-            
           }, child: Text("Write to Selected Device")),
         ),
       ),

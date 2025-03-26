@@ -3,10 +3,14 @@ package id.wajek.bluetooth_printer.bluetooth_printer;
 import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.ParcelUuid;
+import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -14,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -128,13 +133,13 @@ public class BluetoothPrinterPlugin implements FlutterPlugin, MethodCallHandler,
   }
 
   private void getBondedDevices(@NonNull Result result) {
-    BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ContextCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
       result.error("BLUETOOTH_PERMISSION_REQUIRED", "Bluetooth permission is required", null);
       return;
     }
 
+    BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
     if (adapter == null) {
       result.error("BLUETOOTH_NOT_SUPPORTED", "Bluetooth is not supported on this device", null);
       return;
@@ -153,6 +158,9 @@ public class BluetoothPrinterPlugin implements FlutterPlugin, MethodCallHandler,
 
     List<Map<String, Object>> deviceList = new ArrayList<>();
     for(BluetoothDevice d : bondedDevices) {
+      if(d.getBluetoothClass().getMajorDeviceClass() != BluetoothClass.Device.Major.IMAGING) {
+        continue;
+      }
       deviceList.add(
         Map.of(
         "name", d.getName(),
