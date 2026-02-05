@@ -1,4 +1,4 @@
-package id.wajek.bluetooth_printer.bluetooth_printer;
+package id.wajek.bluetooth_printer;
 
 import android.Manifest;
 import android.app.Activity;

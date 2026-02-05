@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:bluetooth_printer/bluetooth_printer.dart';
-import 'package:bluetooth_printer/bluetooth_printer_platform_interface.dart';
-import 'package:bluetooth_printer/bluetooth_printer_method_channel.dart';
+import 'package:bluetooth_printer_plugin/bluetooth_printer_plugin.dart';
+import 'package:bluetooth_printer_plugin/bluetooth_printer_plugin_platform_interface.dart';
+import 'package:bluetooth_printer_plugin/bluetooth_printer_plugin_method_channel.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 class MockBluetoothPrinterPlatform

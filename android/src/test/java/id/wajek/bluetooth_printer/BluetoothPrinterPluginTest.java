@@ -1,4 +1,4 @@
-package id.wajek.bluetooth_printer.bluetooth_printer;
+package id.wajek.bluetooth_printer;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;

@@ -1,5 +1,5 @@
 
-import 'bluetooth_printer_platform_interface.dart';
+import 'bluetooth_printer_plugin_platform_interface.dart';
 
 class BluetoothPrinter {
   Future<String?> getPlatformVersion() {

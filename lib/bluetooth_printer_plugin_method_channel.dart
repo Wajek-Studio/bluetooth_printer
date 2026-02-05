@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-import 'bluetooth_printer_platform_interface.dart';
+import 'bluetooth_printer_plugin_platform_interface.dart';
 
 /// An implementation of [BluetoothPrinterPlatform] that uses method channels.
 class MethodChannelBluetoothPrinter extends BluetoothPrinterPlatform {

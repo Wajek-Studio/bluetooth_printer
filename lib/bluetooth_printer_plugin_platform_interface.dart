@@ -1,6 +1,6 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'bluetooth_printer_method_channel.dart';
+import 'bluetooth_printer_plugin_method_channel.dart';
 
 abstract class BluetoothPrinterPlatform extends PlatformInterface {
   /// Constructs a BluetoothPrinterPlatform.

@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "id.wajek.bluetooth_printer.bluetooth_printer_example"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"
+    ndkVersion = "28.2.13676358"
 //    ndkVersion = flutter.ndkVersion
 
     compileOptions {

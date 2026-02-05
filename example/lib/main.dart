@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
-import 'package:bluetooth_printer/bluetooth_printer.dart';
+import 'package:bluetooth_printer_plugin/bluetooth_printer_plugin.dart';
 
 void main() {
   runApp(const MyApp());

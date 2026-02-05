@@ -1,5 +1,5 @@
-name: bluetooth_printer
-description: "A new Flutter plugin project."
+name: bluetooth_printer_plugin
+description: "Connecting apps to bluetooth printer"
 version: 0.0.1
 homepage:
 
@@ -35,7 +35,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: id.wajek.bluetooth_printer.bluetooth_printer
+        package: id.wajek.bluetooth_printer
         pluginClass: BluetoothPrinterPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
