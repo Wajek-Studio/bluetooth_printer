@@ -1,6 +1,6 @@
 name: bluetooth_printer_plugin
 description: "Connecting apps to bluetooth printer"
-version: 0.0.1
+version: 0.2.0
 homepage:
 
 environment:
