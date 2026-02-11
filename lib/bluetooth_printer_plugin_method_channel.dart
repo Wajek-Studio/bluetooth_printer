@@ -30,9 +30,9 @@ class MethodChannelBluetoothPrinter extends BluetoothPrinterPlatform {
   }
 
   @override
-  Future<bool?> write(String text) async {
+  Future<bool?> write(List<int> data) async {
     final res = await methodChannel.invokeMethod<bool?>('write', <String, dynamic>{
-      "text": text
+      "data": Uint8List.fromList(data)
     });
     return res;
   }

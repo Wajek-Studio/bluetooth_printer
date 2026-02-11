@@ -62,7 +62,7 @@ public class BluetoothPrinterPlugin implements FlutterPlugin, MethodCallHandler,
         connect(result, call.argument("address"));
         break;
       case "write":
-        write(result, call.argument("text"));
+        write(result, call.argument("data"));
         break;
       default:
         result.notImplemented();
@@ -196,7 +196,7 @@ public class BluetoothPrinterPlugin implements FlutterPlugin, MethodCallHandler,
     }
   }
 
-  public void write(@NonNull Result result, String text) {
+  public void write(@NonNull Result result, byte[] data) {
     if(bluetoothSocket == null){
       result.error("NO_SOCKET_AVAILABLE", "Please connect to a device first", null);
       return;
@@ -209,8 +209,7 @@ public class BluetoothPrinterPlugin implements FlutterPlugin, MethodCallHandler,
 
     try {
       OutputStream outStream = bluetoothSocket.getOutputStream();
-      byte[] bytes = text.getBytes();
-      outStream.write(bytes);
+      outStream.write(data);
       result.success(true);
     } catch (IOException e) {
       result.error("FAILED_TO_WRITE", "Failed to write specified data to device", null);

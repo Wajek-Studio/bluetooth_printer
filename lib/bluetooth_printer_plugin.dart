@@ -14,8 +14,8 @@ class BluetoothPrinter {
     return BluetoothPrinterPlatform.instance.connect(address);
   }
 
-  Future<bool?> write(String text) {
-    return BluetoothPrinterPlatform.instance.write(text);
+  Future<bool?> write(List<int> data) {
+    return BluetoothPrinterPlatform.instance.write(data);
   }
 
   Future<bool?> requestBluetoothPermission() {

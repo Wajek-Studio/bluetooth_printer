@@ -35,7 +35,7 @@ abstract class BluetoothPrinterPlatform extends PlatformInterface {
     throw UnimplementedError('connect() has not been implemented.');
   }
 
-  Future<bool?> write(String text) {
+  Future<bool?> write(List<int> data) {
     throw UnimplementedError('write() has not been implemented.');
   }
 
